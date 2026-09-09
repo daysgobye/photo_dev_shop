@@ -20,9 +20,6 @@ const TABS: { id: EditorTabId; label: string; key: string }[] = [
   { id: "js", label: "JS / JSX", key: "3" },
 ]
 
-const TAB_BY_KEY: Record<string, EditorTabId> = Object.fromEntries(
-  TABS.map((tab) => [tab.key, tab.id])
-)
 
 // Built once — language packages provide their own basic completion
 // (tags/attributes for HTML, properties/values for CSS, keywords+scope for JS).
