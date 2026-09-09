@@ -51,18 +51,6 @@ export function CodeEditor({ html: htmlValue, css: cssValue, js: jsValue, onChan
   const isDark = useIsDarkMode()
   const values: Record<EditorTabId, string> = { html: htmlValue, css: cssValue, js: jsValue }
 
-  React.useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (!event.shiftKey || !(event.ctrlKey || event.metaKey)) return
-      const tabId = TAB_BY_KEY[event.key]
-      if (!tabId) return
-      event.preventDefault()
-      setActive(tabId)
-    }
-    window.addEventListener("keydown", handleKeyDown)
-    return () => window.removeEventListener("keydown", handleKeyDown)
-  }, [])
-
   return (
     <div className="flex h-full flex-col overflow-hidden rounded-lg border border-border bg-card">
       <div className="flex border-b border-border">
@@ -80,9 +68,6 @@ export function CodeEditor({ html: htmlValue, css: cssValue, js: jsValue, onChan
             )}
           >
             {tab.label}
-            <span className="rounded bg-muted px-1 py-0.5 text-[10px] leading-none text-muted-foreground">
-              ⇧{tab.key}
-            </span>
           </button>
         ))}
       </div>
