@@ -19,7 +19,7 @@ export const TEMPLATES: Record<string, () => CanvasProject> = {
 <!-- React + ReactDOM are loaded here as plain globals so your JS tab can use JSX. -->
 <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
 <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 <div id="root"></div>`,
     css: `body {
   margin: 0;
