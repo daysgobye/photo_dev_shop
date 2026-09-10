@@ -66,15 +66,15 @@ export function CanvasTool() {
         onLayoutChanged={onLayoutChanged}
         className="min-h-0 flex-1"
       >
-        <Panel id="editor" defaultSize="38%" minSize="20%" className="min-h-0">
+        <Panel id="editor" defaultSize="38%" minSize="20%" className="min-h-0" collapsible={true}>
           <CodeEditor html={project.html} css={project.css} js={project.js} onChange={updateCode} />
         </Panel>
         <ResizeHandle />
-        <Panel id="preview" defaultSize="42%" minSize="20%" className="min-h-0">
+        <Panel id="preview" defaultSize="42%" minSize="20%" className="min-h-0" collapsible={true}>
           <PreviewFrame ref={previewRef} project={project} />
         </Panel>
         <ResizeHandle />
-        <Panel id="assets" defaultSize="20%" minSize="14%" maxSize="45%" className="min-h-0">
+        <Panel id="assets" defaultSize="20%" minSize="14%" maxSize="45%" className="min-h-0" collapsible={true}  >
           <div className="h-full overflow-auto rounded-lg border border-border bg-card p-3">
             <AssetManager assets={project.assets} onChange={(assets) => patch({ assets })} />
           </div>
