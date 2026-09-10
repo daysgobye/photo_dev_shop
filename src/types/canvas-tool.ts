@@ -30,3 +30,51 @@ export interface CanvasProject {
   js: string
   assets: CanvasAsset[]
 }
+
+/* -------------------------------------------------------------------------- */
+/* AI Agent                                                                    */
+/* -------------------------------------------------------------------------- */
+
+/** Persisted, non-sensitive-by-design settings for the AI agent panel. */
+export interface AgentSettings {
+  apiKey: string
+  model: string
+}
+
+/** The subset of a CanvasProject the agent is allowed to rewrite. */
+export interface AgentCode {
+  html: string
+  css: string
+  js: string
+}
+
+export type AgentLogKind =
+  | "user"
+  | "assistant"
+  | "error"
+  | "screenshot"
+  | "status"
+  | "done"
+  | "stopped"
+
+export interface AgentLogEntry {
+  id: string
+  kind: AgentLogKind
+  timestamp: number
+  text?: string
+  imageDataUrl?: string
+}
+
+export type AgentRunStatus = "idle" | "running" | "stopped" | "done" | "error"
+
+/** One parsed turn from the model. */
+export interface AgentTurn {
+  message: string
+  done: boolean
+  html?: string
+  css?: string
+  js?: string
+}
+
+/** Result of letting a freshly-applied generation render in the preview iframe. */
+export type AgentRenderOutcome = { ok: true } | { ok: false; error: string }

@@ -8,10 +8,14 @@ export interface PreviewFrameHandle {
 
 interface PreviewFrameProps {
   project: CanvasProject
+  /** Bump this whenever project code changes for a reason callers need to track (e.g. the AI agent). */
+  generation?: number
+  /** Fired when the current generation's code throws, synchronously or asynchronously. */
+  onRuntimeError?: (message: string, generation: number) => void
 }
 
 export const PreviewFrame = React.forwardRef<PreviewFrameHandle, PreviewFrameProps>(
-  function PreviewFrame({ project }, ref) {
+  function PreviewFrame({ project, generation = 0, onRuntimeError }, ref) {
     const iframeRef = React.useRef<HTMLIFrameElement>(null)
     const containerRef = React.useRef<HTMLDivElement>(null)
     const [scale, setScale] = React.useState(1)
@@ -19,7 +23,10 @@ export const PreviewFrame = React.forwardRef<PreviewFrameHandle, PreviewFramePro
       new Map<string, { resolve: (value: string) => void; reject: (error: Error) => void }>()
     )
 
-    const srcDoc = React.useMemo(() => buildPreviewDocument(project), [project])
+    const srcDoc = React.useMemo(
+      () => buildPreviewDocument(project, generation),
+      [project, generation]
+    )
 
     // Keep the preview scaled to fit its container, capped at 1:1.
     React.useEffect(() => {
@@ -43,6 +50,12 @@ export const PreviewFrame = React.forwardRef<PreviewFrameHandle, PreviewFramePro
       const handler = (event: MessageEvent) => {
         const data = event.data
         if (!data || typeof data !== "object") return
+
+        if (data.type === "canvas-tool:runtime-error") {
+          onRuntimeError?.(String(data.message), Number(data.generation))
+          return
+        }
+
         if (data.type !== "canvas-tool:capture-result" && data.type !== "canvas-tool:capture-error") return
         const pending = pendingCaptures.current.get(data.requestId)
         if (!pending) return
@@ -52,7 +65,7 @@ export const PreviewFrame = React.forwardRef<PreviewFrameHandle, PreviewFramePro
       }
       window.addEventListener("message", handler)
       return () => window.removeEventListener("message", handler)
-    }, [])
+    }, [onRuntimeError])
 
     React.useImperativeHandle(ref, () => ({
       capture: (format, quality = 0.92, transparent = false) => {

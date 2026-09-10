@@ -13,8 +13,11 @@ const BABEL_SRC = "https://unpkg.com/@babel/standalone@7.24.7/babel.min.js"
  * - `project.js` is always run through Babel's React preset, so JSX works by
  *   default and plain JS just passes through unchanged.
  * - A postMessage listener lets the parent request an html2canvas capture.
+ * - `generation` is stamped into the document and echoed back on every
+ *   "canvas-tool:runtime-error" message so the parent can tell which attempt
+ *   an error belongs to (e.g. after the AI agent applies a new revision).
  */
-export function buildPreviewDocument(project: CanvasProject): string {
+export function buildPreviewDocument(project: CanvasProject, generation = 0): string {
   const { html, css, js, width, height, assets } = project
 
   const assetScript = assets
@@ -37,6 +40,26 @@ ${html}
 <script src="${BABEL_SRC}"></script>
 <script>
 (function () {
+  var __gen = ${JSON.stringify(generation)}
+
+  function reportError(message) {
+    parent.postMessage({ type: "canvas-tool:runtime-error", message: String(message), generation: __gen }, "*")
+    var pre = document.createElement("pre")
+    pre.style.cssText =
+      "position:fixed;top:0;left:0;right:0;margin:0;padding:8px;background:#fff;color:#b91c1c;" +
+      "font:12px monospace;white-space:pre-wrap;z-index:999999;"
+    pre.textContent = String(message)
+    document.body.appendChild(pre)
+  }
+
+  window.addEventListener("error", function (event) {
+    reportError(event.message || (event.error && event.error.message) || "Unknown error")
+  })
+  window.addEventListener("unhandledrejection", function (event) {
+    var reason = event.reason
+    reportError((reason && (reason.message || String(reason))) || "Unhandled promise rejection")
+  })
+
   window.addEventListener("message", function (event) {
     var data = event.data
     if (!data || data.type !== "canvas-tool:capture") return
@@ -69,13 +92,7 @@ ${html}
     var compiled = window.Babel.transform(source, { presets: ["react"], filename: "main.jsx" }).code
     new Function(compiled)()
   } catch (err) {
-    console.error(err)
-    var pre = document.createElement("pre")
-    pre.style.cssText =
-      "position:fixed;top:0;left:0;right:0;margin:0;padding:8px;background:#fff;color:#b91c1c;" +
-      "font:12px monospace;white-space:pre-wrap;z-index:999999;"
-    pre.textContent = err && err.message ? err.message : String(err)
-    document.body.appendChild(pre)
+    reportError(err && err.message ? err.message : String(err))
   }
 })()
 </script>
