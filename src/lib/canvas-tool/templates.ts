@@ -1,31 +1,28 @@
 import type { CanvasProject, EditorMode } from "@/types/canvas-tool"
+import { base } from "./template-styles/shared"
+import { naive } from "./template-styles/naive"
+import { zine } from "./template-styles/zine"
+import { tactile } from "./template-styles/tactile"
+import { frutiger } from "./template-styles/frutiger"
+import { neobrutal } from "./template-styles/neo-brutalism"
+import { blackmetal } from "./template-styles/brutal-metal"
+import { rawHtml } from "./template-styles/raw-html"
+import { neocities } from "./template-styles/neocities"
 
-function base(mode: EditorMode): Omit<CanvasProject, "html" | "css" | "js" | "name"> {
-  return {
-    formatVersion: 1,
-    mode,
-    width: 1080,
-    height: 1080,
-    aspectRatioId: "1:1",
-    assets: [],
-  }
-}
-
-export const TEMPLATES: Record<string, () => CanvasProject> = {
-  "react-blank": () => ({
-    ...base("react"),
-    name: "React Blank",
-    html: `<!-- This tab is mainly for libraries: fonts, <link> tags, <script src="..."> tags. -->
+const blankReact = (): CanvasProject => ({
+  ...base("react"),
+  name: "React Blank",
+  html: `<!-- This tab is mainly for libraries: fonts, <link> tags, <script src="..."> tags. -->
 <!-- React + ReactDOM are loaded here as plain globals so your JS tab can use JSX. -->
 <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
 <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
 <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 <div id="root"></div>`,
-    css: `body {
+  css: `body {
   margin: 0;
   font-family: system-ui, sans-serif;
 }`,
-    js: `function App() {
+  js: `function App() {
   return (
     <div
       style={{
@@ -46,14 +43,14 @@ export const TEMPLATES: Record<string, () => CanvasProject> = {
 }
 
 ReactDOM.createRoot(document.getElementById("root")).render(<App />)`,
-  }),
+})
 
-  "vanilla-blank": () => ({
-    ...base("vanilla"),
-    name: "Vanilla Blank",
-    html: `<!-- This tab is your markup, plus any <link>/<script> tags for libraries. -->
+const blankVanilla = (): CanvasProject => ({
+  ...base("vanilla"),
+  name: "Vanilla Blank",
+  html: `<!-- This tab is your markup, plus any <link>/<script> tags for libraries. -->
 <div class="box">Hello, Canvas</div>`,
-    css: `body {
+  css: `body {
   margin: 0;
   font-family: system-ui, sans-serif;
 }
@@ -68,11 +65,95 @@ ReactDOM.createRoot(document.getElementById("root")).render(<App />)`,
   font-size: 48px;
   font-weight: 700;
 }`,
-    js: `// Plain JS — document, window, etc. are all available.
+  js: `// Plain JS — document, window, etc. are all available.
 console.log("canvas ready")`,
-  }),
+})
+
+export interface TemplateOption {
+  key: string
+  label: string
+  build: () => CanvasProject
 }
 
+export interface TemplateGroup {
+  label: string
+  options: TemplateOption[]
+}
+
+export const TEMPLATE_GROUPS: TemplateGroup[] = [
+  {
+    label: "Blank",
+    options: [
+      { key: "react-blank", label: "React", build: blankReact },
+      { key: "vanilla-blank", label: "Vanilla", build: blankVanilla },
+    ],
+  },
+  {
+    label: "Naive Doodle",
+    options: [
+      { key: "react-naive", label: "React", build: naive.react },
+      { key: "vanilla-naive", label: "Vanilla", build: naive.vanilla },
+    ],
+  },
+  {
+    label: "Zine Collage",
+    options: [
+      { key: "react-zine", label: "React", build: zine.react },
+      { key: "vanilla-zine", label: "Vanilla", build: zine.vanilla },
+    ],
+  },
+  {
+    label: "Tactile Craft",
+    options: [
+      { key: "react-tactile", label: "React", build: tactile.react },
+      { key: "vanilla-tactile", label: "Vanilla", build: tactile.vanilla },
+    ],
+  },
+  {
+    label: "Frutiger Aero",
+    options: [
+      { key: "react-frutiger", label: "React", build: frutiger.react },
+      { key: "vanilla-frutiger", label: "Vanilla", build: frutiger.vanilla },
+    ],
+  },
+  {
+    label: "Neo-Brutalism",
+    options: [
+      { key: "react-neobrutal", label: "React", build: neobrutal.react },
+      { key: "vanilla-neobrutal", label: "Vanilla", build: neobrutal.vanilla },
+    ],
+  },
+  {
+    label: "Black Metal Brutalist",
+    options: [
+      { key: "react-blackmetal", label: "React", build: blackmetal.react },
+      { key: "vanilla-blackmetal", label: "Vanilla", build: blackmetal.vanilla },
+    ],
+  },
+  {
+    label: "Raw HTML",
+    options: [
+      { key: "react-rawhtml", label: "React", build: rawHtml.react },
+      { key: "vanilla-rawhtml", label: "Vanilla", build: rawHtml.vanilla },
+    ],
+  },
+  {
+    label: "Neocities",
+    options: [
+      { key: "react-neocities", label: "React", build: neocities.react },
+      { key: "vanilla-neocities", label: "Vanilla", build: neocities.vanilla },
+    ],
+  },
+]
+
+export const TEMPLATES: Record<string, () => CanvasProject> = TEMPLATE_GROUPS.reduce(
+  (acc, group) => {
+    for (const option of group.options) acc[option.key] = option.build
+    return acc
+  },
+  {} as Record<string, () => CanvasProject>
+)
+
 export function createDefaultProject(mode: EditorMode = "react"): CanvasProject {
-  return mode === "react" ? TEMPLATES["react-blank"]() : TEMPLATES["vanilla-blank"]()
+  return mode === "react" ? blankReact() : blankVanilla()
 }

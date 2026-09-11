@@ -1,8 +1,7 @@
 import * as React from "react"
 import { Button } from "@/components/ui/button"
-import { TEMPLATES } from "@/lib/canvas-tool/templates"
 import type { CanvasProject } from "@/types/canvas-tool"
-
+import { TEMPLATES, TEMPLATE_GROUPS } from "@/lib/canvas-tool/templates"
 interface ProjectIOProps {
   project: CanvasProject
   onLoad: (project: CanvasProject) => void
@@ -20,13 +19,12 @@ export function ProjectIO({ project, onLoad }: ProjectIOProps) {
     a.click()
     URL.revokeObjectURL(url)
   }
-
   const handleImportFile = (file: File) => {
     const reader = new FileReader()
     reader.onload = () => {
       try {
         const parsed = JSON.parse(String(reader.result)) as CanvasProject
-        onLoad(parsed)
+        onLoad({ ...parsed })
       } catch {
         alert("That file isn't a valid canvas project JSON.")
       }
@@ -45,10 +43,14 @@ export function ProjectIO({ project, onLoad }: ProjectIOProps) {
         }}
       >
         <option value="">Load template…</option>
-        {Object.keys(TEMPLATES).map((key) => (
-          <option key={key} value={key}>
-            {key}
-          </option>
+        {TEMPLATE_GROUPS.map((group) => (
+          <optgroup key={group.label} label={group.label}>
+            {group.options.map((option) => (
+              <option key={option.key} value={option.key}>
+                {group.label} — {option.label}
+              </option>
+            ))}
+          </optgroup>
         ))}
       </select>
       <Button size="sm" variant="outline" onClick={() => fileInputRef.current?.click()}>

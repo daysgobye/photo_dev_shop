@@ -2,7 +2,7 @@ import * as React from "react"
 import { Check, Copy } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import type { CanvasAsset } from "@/types/canvas-tool"
-
+import { copyToClipboard } from "@/lib/canvas-tool/clipboard"
 interface AssetManagerProps {
   assets: CanvasAsset[]
   onChange: (assets: CanvasAsset[]) => void
@@ -24,24 +24,6 @@ function buildSnippet(varName: string, kind: SnippetKind) {
   return `const img = document.createElement("img")
 img.src = ${varName}
 document.body.appendChild(img)`
-}
-
-async function copyToClipboard(text: string) {
-  try {
-    await navigator.clipboard.writeText(text)
-    return true
-  } catch {
-    // Fallback for environments without the async clipboard API.
-    const textarea = document.createElement("textarea")
-    textarea.value = text
-    textarea.style.position = "fixed"
-    textarea.style.opacity = "0"
-    document.body.appendChild(textarea)
-    textarea.select()
-    const ok = document.execCommand("copy")
-    document.body.removeChild(textarea)
-    return ok
-  }
 }
 
 export function AssetManager({ assets, onChange }: AssetManagerProps) {

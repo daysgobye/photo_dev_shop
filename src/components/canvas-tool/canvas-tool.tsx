@@ -9,7 +9,8 @@ import { ProjectIO } from "@/components/canvas-tool/project-io"
 import { ResizeHandle } from "@/components/canvas-tool/resize-handle"
 import { createDefaultProject } from "@/lib/canvas-tool/templates"
 import type { CanvasProject, EditorTabId, ImageExportFormat } from "@/types/canvas-tool"
-
+import { FontManager } from "@/components/canvas-tool/font-manager"
+import { PromptMenu } from "@/components/canvas-tool/prompt-menu"
 export function CanvasTool() {
   const [project, setProject] = React.useState<CanvasProject>(() => createDefaultProject("react"))
   const previewRef = React.useRef<PreviewFrameHandle>(null)
@@ -46,6 +47,7 @@ export function CanvasTool() {
         <DocumentControls project={project} onChange={patch} />
         <div className="flex items-center gap-2">
           <ProjectIO project={project} onLoad={setProject} />
+          <PromptMenu project={project} />
           <select
             className="h-8 rounded-md border border-border bg-background px-2 text-xs"
             value={exportFormat}
@@ -74,9 +76,13 @@ export function CanvasTool() {
           <PreviewFrame ref={previewRef} project={project} />
         </Panel>
         <ResizeHandle />
-        <Panel id="assets" defaultSize="20%" minSize="14%" maxSize="45%" className="min-h-0" collapsible={true}  >
-          <div className="h-full overflow-auto rounded-lg border border-border bg-card p-3">
+
+        <Panel id="assets" defaultSize="20%" minSize="14%" maxSize="45%" className="min-h-0" collapsible={true}>
+          <div className="flex h-full flex-col gap-4 overflow-auto rounded-lg border border-border bg-card p-3">
             <AssetManager assets={project.assets} onChange={(assets) => patch({ assets })} />
+            <div className="border-t border-border pt-3">
+              <FontManager fonts={project.fonts} onChange={(fonts) => patch({ fonts })} />
+            </div>
           </div>
         </Panel>
       </Group>

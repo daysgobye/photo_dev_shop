@@ -8,6 +8,8 @@ const BABEL_SRC = "https://unpkg.com/@babel/standalone@7.24.7/babel.min.js"
  *
  * - `project.html` is dropped straight into <body>, so any <script src>/<link>
  *   tags the user added for libraries/fonts load and execute in order.
+ * - `project.fonts` become `@font-face` rules (before `project.css`), so any
+ *   uploaded font file is usable by its `font-family` name immediately.
  * - `project.css` becomes a <style> tag.
  * - Each asset becomes `window[varName] = "data:...";` before user code runs.
  * - `project.js` is always run through Babel's React preset, so JSX works by
@@ -15,10 +17,17 @@ const BABEL_SRC = "https://unpkg.com/@babel/standalone@7.24.7/babel.min.js"
  * - A postMessage listener lets the parent request an html2canvas capture.
  */
 export function buildPreviewDocument(project: CanvasProject): string {
-  const { html, css, js, width, height, assets } = project
+  const { html, css, js, width, height, assets, fonts = [] } = project
 
   const assetScript = assets
     .map((asset) => `window[${JSON.stringify(asset.varName)}] = ${JSON.stringify(asset.dataUrl)};`)
+    .join("\n")
+
+  const fontFaceCss = fonts
+    .map(
+      (font) =>
+        `@font-face { font-family: ${JSON.stringify(font.fontFamily)}; src: url(${JSON.stringify(font.dataUrl)}) format(${JSON.stringify(font.format)}); font-display: swap; }`
+    )
     .join("\n")
 
   return `<!DOCTYPE html>
@@ -28,6 +37,7 @@ export function buildPreviewDocument(project: CanvasProject): string {
 <style>
   html, body { margin: 0; padding: 0; width: ${width}px; height: ${height}px; overflow: hidden; }
 </style>
+<style>${fontFaceCss}</style>
 <style>${css}</style>
 </head>
 <body>
