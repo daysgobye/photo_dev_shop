@@ -9,6 +9,7 @@
     "lint": "eslint .",
     "format": "prettier --write \"**/*.{ts,tsx}\"",
     "typecheck": "tsc --noEmit",
+    "test": "vitest run",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -22,6 +23,7 @@
     "@uiw/react-codemirror": "^4.25.11",
     "class-variance-authority": "^0.7.1",
     "cn": "^0.2.6",
+    "esbuild-wasm": "^0.28.2",
     "lucide-react": "^1.43.0",
     "react": "^19.2.6",
     "react-dom": "^19.2.6",
@@ -44,6 +46,7 @@
     "prettier-plugin-tailwindcss": "^0.8.0",
     "typescript": "~6",
     "typescript-eslint": "^8",
-    "vite": "^8"
+    "vite": "^8",
+    "vitest": "^5.0.1"
   }
 }

@@ -1,7 +1,8 @@
 export type EditorMode = "vanilla" | "react"
 export type EditorTabId = "html" | "css" | "js"
-export type ImageExportFormat = "png" | "jpeg"
-export type FontFormat = "woff2" | "woff" | "truetype" | "opentype" | "embedded-opentype"
+export type ImageExportFormat = "png" | "jpeg" | "html"
+export type FontFormat =
+  "woff2" | "woff" | "truetype" | "opentype" | "embedded-opentype"
 
 export interface CanvasAsset {
   id: string

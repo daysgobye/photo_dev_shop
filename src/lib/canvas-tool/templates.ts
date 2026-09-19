@@ -1,43 +1,61 @@
 import type { CanvasProject, EditorMode } from "@/types/canvas-tool"
-import { base } from "./template-styles/shared"
-import { naive } from "./template-styles/naive"
-import { zine } from "./template-styles/zine"
-import { tactile } from "./template-styles/tactile"
-import { frutiger } from "./template-styles/frutiger"
-import { neobrutal } from "./template-styles/neo-brutalism"
-import { blackmetal } from "./template-styles/brutal-metal"
-import { rawHtml } from "./template-styles/raw-html"
-import { neocities } from "./template-styles/neocities"
+import { flyer } from "./template-styles/flyer"
+import { instagramPost } from "./template-styles/instagram-post"
+import { zine } from "./template-styles/zine-cover"
+import { storyCover } from "./template-styles/story-cover"
+import { eventPoster } from "./template-styles/event-poster"
+import { menu } from "./template-styles/menu"
+import { photoPrint } from "./template-styles/photo-print"
+import { businessCard } from "./template-styles/business-card"
+import { stickerSheet } from "./template-styles/sticker-sheet"
 
 const blankReact = (): CanvasProject => ({
-  ...base("react"),
-  name: "React Blank",
+  formatVersion: 1,
+  mode: "react",
+  name: "Blank (React)",
+  width: 1080,
+  height: 1080,
+  aspectRatioId: "1:1",
+  assets: [],
+  fonts: [],
   html: `<!-- This tab is mainly for libraries: fonts, <link> tags, <script src="..."> tags. -->
 <!-- React + ReactDOM are loaded here as plain globals so your JS tab can use JSX. -->
 <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
 <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
 <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 <div id="root"></div>`,
-  css: `body {
-  margin: 0;
+  css: `html, body { margin: 0; height: 100%; }
+#root { width: 100%; height: 100%; }
+body {
   font-family: system-ui, sans-serif;
+}
+.blank-hero {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2vmin;
+  background: #111827;
+  color: white;
+  font-size: clamp(2rem, 6vmin, 4rem);
+  font-weight: 700;
+  text-align: center;
+}
+.blank-hero small {
+  font-size: clamp(0.85rem, 2.4vmin, 1.25rem);
+  font-weight: 400;
+  color: #9ca3af;
+}
+@media (max-aspect-ratio: 3/4) {
+  .blank-hero { font-size: clamp(1.6rem, 7vmin, 2.6rem); }
 }`,
   js: `function App() {
   return (
-    <div
-      style={{
-        width: "100%",
-        height: "100%",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        background: "#111827",
-        color: "white",
-        fontSize: 48,
-        fontWeight: 700,
-      }}
-    >
+    <div className="blank-hero">
       Hello, Canvas
+      <small>Pick an aspect ratio up top and watch this reflow.</small>
     </div>
   )
 }
@@ -46,24 +64,41 @@ ReactDOM.createRoot(document.getElementById("root")).render(<App />)`,
 })
 
 const blankVanilla = (): CanvasProject => ({
-  ...base("vanilla"),
-  name: "Vanilla Blank",
+  formatVersion: 1,
+  mode: "vanilla",
+  name: "Blank (Vanilla)",
+  width: 1080,
+  height: 1080,
+  aspectRatioId: "1:1",
+  assets: [],
+  fonts: [],
   html: `<!-- This tab is your markup, plus any <link>/<script> tags for libraries. -->
 <div class="box">Hello, Canvas</div>`,
-  css: `body {
-  margin: 0;
+  css: `html, body { margin: 0; height: 100%; }
+body {
   font-family: system-ui, sans-serif;
 }
 .box {
   width: 100%;
   height: 100%;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 2vmin;
   background: #111827;
   color: white;
-  font-size: 48px;
+  font-size: clamp(2rem, 6vmin, 4rem);
   font-weight: 700;
+  text-align: center;
+}
+.box small {
+  font-size: clamp(0.85rem, 2.4vmin, 1.25rem);
+  font-weight: 400;
+  color: #9ca3af;
+}
+@media (max-aspect-ratio: 3/4) {
+  .box { font-size: clamp(1.6rem, 7vmin, 2.6rem); }
 }`,
   js: `// Plain JS — document, window, etc. are all available.
 console.log("canvas ready")`,
@@ -89,60 +124,59 @@ export const TEMPLATE_GROUPS: TemplateGroup[] = [
     ],
   },
   {
-    label: "Naive Doodle",
+    label: "Gig Flyer",
     options: [
-      { key: "react-naive", label: "React", build: naive.react },
-      { key: "vanilla-naive", label: "Vanilla", build: naive.vanilla },
+      { key: "react-flyer", label: "React · Neo Brutalism", build: flyer.react },
+      { key: "vanilla-flyer", label: "Vanilla · Frutiger Aero", build: flyer.vanilla },
     ],
   },
   {
-    label: "Zine Collage",
+    label: "Instagram Post",
     options: [
-      { key: "react-zine", label: "React", build: zine.react },
-      { key: "vanilla-zine", label: "Vanilla", build: zine.vanilla },
+      { key: "react-igpost", label: "React · Naive Doodle", build: instagramPost.react },
     ],
   },
   {
-    label: "Tactile Craft",
+    label: "Zine",
     options: [
-      { key: "react-tactile", label: "React", build: tactile.react },
-      { key: "vanilla-tactile", label: "Vanilla", build: tactile.vanilla },
+      { key: "react-zine-cover", label: "React · Cover", build: zine.react },
+      { key: "vanilla-zine-back", label: "Vanilla · Back cover", build: zine.vanilla },
     ],
   },
   {
-    label: "Frutiger Aero",
+    label: "Story Cover",
     options: [
-      { key: "react-frutiger", label: "React", build: frutiger.react },
-      { key: "vanilla-frutiger", label: "Vanilla", build: frutiger.vanilla },
+      { key: "react-story", label: "React · Tactile Craft", build: storyCover.react },
     ],
   },
   {
-    label: "Neo-Brutalism",
+    label: "Event Poster",
     options: [
-      { key: "react-neobrutal", label: "React", build: neobrutal.react },
-      { key: "vanilla-neobrutal", label: "Vanilla", build: neobrutal.vanilla },
+      { key: "react-poster-split", label: "React · Split image + text", build: eventPoster.react },
+      { key: "vanilla-poster-neocities", label: "Vanilla · Neocities", build: eventPoster.vanilla },
     ],
   },
   {
-    label: "Black Metal Brutalist",
+    label: "Menu",
     options: [
-      { key: "react-blackmetal", label: "React", build: blackmetal.react },
-      { key: "vanilla-blackmetal", label: "Vanilla", build: blackmetal.vanilla },
+      { key: "vanilla-menu", label: "Vanilla · Price List", build: menu.vanilla },
     ],
   },
   {
-    label: "Raw HTML",
+    label: "Photo Print",
     options: [
-      { key: "react-rawhtml", label: "React", build: rawHtml.react },
-      { key: "vanilla-rawhtml", label: "Vanilla", build: rawHtml.vanilla },
+      { key: "react-photo-print", label: "React · Film Strip", build: photoPrint.react },
     ],
   },
   {
-    label: "Neocities",
+    label: "Business Card",
     options: [
-      { key: "react-neocities", label: "React", build: neocities.react },
-      { key: "vanilla-neocities", label: "Vanilla", build: neocities.vanilla },
+      { key: "react-business-card", label: "React · Neo Brutalism", build: businessCard.react },
     ],
+  },
+  {
+    label: "Sticker Sheet",
+    options: [{ key: "react-sticker-sheet", label: "React · Die Cut", build: stickerSheet.react }],
   },
 ]
 
