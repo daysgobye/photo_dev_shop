@@ -1,6 +1,10 @@
 import type { CanvasProject } from "@/types/canvas-tool"
 
-const HTML2CANVAS_SRC = "https://unpkg.com/html2canvas@1.4.1/dist/html2canvas.min.js"
+// Vendored, locally patched copy of html2canvas-pro 2.4.3. Upstream 2.4.3
+// double-appends units in its `filter` parser, emitting invalid `blur(4pxpx)` /
+// `hue-rotate(90degdeg)` that canvas ignores, so Blur and Hue rotate were
+// missing from exports. See the patch header in the vendored file.
+const HTML2CANVAS_SRC = `${import.meta.env.BASE_URL}vendor/html2canvas-pro-2.4.3.min.js`
 const BABEL_SRC = "https://unpkg.com/@babel/standalone@7.24.7/babel.min.js"
 
 /**
@@ -14,7 +18,7 @@ const BABEL_SRC = "https://unpkg.com/@babel/standalone@7.24.7/babel.min.js"
  * - Each asset becomes `window[varName] = "data:...";` before user code runs.
  * - `project.js` is always run through Babel's React preset, so JSX works by
  *   default and plain JS just passes through unchanged.
- * - A postMessage listener lets the parent request an html2canvas capture.
+ * - A postMessage listener lets the parent request an html2canvas-pro capture.
  */
 export function buildPreviewDocument(project: CanvasProject): string {
   const { html, css, js, width, height, assets, fonts = [] } = project

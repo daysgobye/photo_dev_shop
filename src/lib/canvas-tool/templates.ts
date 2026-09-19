@@ -7,7 +7,9 @@ import { eventPoster } from "./template-styles/event-poster"
 import { menu } from "./template-styles/menu"
 import { photoPrint } from "./template-styles/photo-print"
 import { businessCard } from "./template-styles/business-card"
+import { businessCardSheet } from "./template-styles/business-card-sheet"
 import { stickerSheet } from "./template-styles/sticker-sheet"
+import { filterShowcase } from "./template-styles/filter-showcase"
 
 const blankReact = (): CanvasProject => ({
   formatVersion: 1,
@@ -126,68 +128,137 @@ export const TEMPLATE_GROUPS: TemplateGroup[] = [
   {
     label: "Gig Flyer",
     options: [
-      { key: "react-flyer", label: "React · Neo Brutalism", build: flyer.react },
-      { key: "vanilla-flyer", label: "Vanilla · Frutiger Aero", build: flyer.vanilla },
+      {
+        key: "react-flyer",
+        label: "React · Neo Brutalism",
+        build: flyer.react,
+      },
+      {
+        key: "vanilla-flyer",
+        label: "Vanilla · Frutiger Aero",
+        build: flyer.vanilla,
+      },
     ],
   },
   {
     label: "Instagram Post",
     options: [
-      { key: "react-igpost", label: "React · Naive Doodle", build: instagramPost.react },
+      {
+        key: "react-igpost",
+        label: "React · Naive Doodle",
+        build: instagramPost.react,
+      },
     ],
   },
   {
     label: "Zine",
     options: [
       { key: "react-zine-cover", label: "React · Cover", build: zine.react },
-      { key: "vanilla-zine-back", label: "Vanilla · Back cover", build: zine.vanilla },
+      {
+        key: "vanilla-zine-back",
+        label: "Vanilla · Back cover",
+        build: zine.vanilla,
+      },
     ],
   },
   {
     label: "Story Cover",
     options: [
-      { key: "react-story", label: "React · Tactile Craft", build: storyCover.react },
+      {
+        key: "react-story",
+        label: "React · Tactile Craft",
+        build: storyCover.react,
+      },
     ],
   },
   {
     label: "Event Poster",
     options: [
-      { key: "react-poster-split", label: "React · Split image + text", build: eventPoster.react },
-      { key: "vanilla-poster-neocities", label: "Vanilla · Neocities", build: eventPoster.vanilla },
+      {
+        key: "react-poster-split",
+        label: "React · Split image + text",
+        build: eventPoster.react,
+      },
+      {
+        key: "vanilla-poster-neocities",
+        label: "Vanilla · Neocities",
+        build: eventPoster.vanilla,
+      },
     ],
   },
   {
     label: "Menu",
     options: [
-      { key: "vanilla-menu", label: "Vanilla · Price List", build: menu.vanilla },
+      {
+        key: "vanilla-menu",
+        label: "Vanilla · Price List",
+        build: menu.vanilla,
+      },
     ],
   },
   {
     label: "Photo Print",
     options: [
-      { key: "react-photo-print", label: "React · Film Strip", build: photoPrint.react },
+      {
+        key: "react-photo-print",
+        label: "React · Film Strip",
+        build: photoPrint.react,
+      },
     ],
   },
   {
     label: "Business Card",
     options: [
-      { key: "react-business-card", label: "React · Neo Brutalism", build: businessCard.react },
+      {
+        key: "react-business-card",
+        label: "React · Neo Brutalism",
+        build: businessCard.react,
+      },
+      {
+        key: "react-business-card-sheet",
+        label: "React · Letter Sheet",
+        build: businessCardSheet.react,
+      },
     ],
   },
   {
     label: "Sticker Sheet",
-    options: [{ key: "react-sticker-sheet", label: "React · Die Cut", build: stickerSheet.react }],
+    options: [
+      {
+        key: "react-sticker-sheet",
+        label: "React · Die Cut",
+        build: stickerSheet.react,
+      },
+    ],
+  },
+  {
+    label: "Filter Showcase",
+    options: [
+      {
+        key: "react-filter-before-after",
+        label: "React · Before / After",
+        build: filterShowcase.react.beforeAfter,
+      },
+      {
+        key: "react-filter-portrait",
+        label: "React · Portrait B&W",
+        build: filterShowcase.react.portrait,
+      },
+    ],
   },
 ]
 
-export const TEMPLATES: Record<string, () => CanvasProject> = TEMPLATE_GROUPS.reduce(
-  (acc, group) => {
-    for (const option of group.options) acc[option.key] = option.build
-    return acc
-  },
-  {} as Record<string, () => CanvasProject>
-)
+export const TEMPLATES: Record<string, () => CanvasProject> =
+  TEMPLATE_GROUPS.reduce(
+    (acc, group) => {
+      for (const option of group.options) acc[option.key] = option.build
+      return acc
+    },
+    {} as Record<string, () => CanvasProject>
+  )
 
-export function createDefaultProject(mode: EditorMode = "react"): CanvasProject {
+export function createDefaultProject(
+  mode: EditorMode = "react"
+): CanvasProject {
   return mode === "react" ? blankReact() : blankVanilla()
 }

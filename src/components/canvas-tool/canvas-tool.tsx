@@ -150,6 +150,8 @@ export function CanvasTool() {
             <AssetManager
               assets={project.assets}
               onChange={(assets) => patch({ assets })}
+              css={project.css}
+              onCssChange={(css) => patch({ css })}
             />
             <div className="border-t border-border pt-3">
               <FontManager
