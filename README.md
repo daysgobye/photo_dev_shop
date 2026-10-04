@@ -1,5 +1,7 @@
 # Photo Dev Shop
 
+[![CI](https://github.com/daysgobye/photo_dev_shop/actions/workflows/ci.yml/badge.svg)](https://github.com/daysgobye/photo_dev_shop/actions/workflows/ci.yml)
+
 **Photoshop for developers.** Design and export images with HTML, CSS, and
 JavaScript — the tools you already know — instead of learning a design
 application. Nothing new to learn, no proprietary format, and the output is
@@ -142,6 +144,10 @@ prompt assembly, and the clipboard fallback. `clipboard.test.ts` stubs
 
 There are no component tests. The panels are thin enough that their logic lives
 in `src/lib`, which is where the tests are.
+
+CI runs `lint`, `typecheck`, `test`, and a production `build` on every push to
+`main` and every pull request against it, installing with `--frozen-lockfile`
+against the committed `bun.lock`.
 
 ## Adding shadcn/ui components
 
