@@ -32,7 +32,9 @@ file.
   name in CSS.
 - **17 starting templates** across 11 groups — flyers, Instagram posts, zines,
   story covers, event posters, menus, photo prints, business cards, sticker
-  sheets, and filter showcases. Each ships in React or vanilla variants.
+  sheets, and filter showcases. Blank, flyer, zine, and poster templates ship in
+  both React and vanilla variants; the rest are React-only except the menu, which
+  is vanilla.
 - **Export three ways** — PNG, JPEG, or a standalone HTML file with everything
   inlined and minified.
 - **AI prompt helpers** — build a "start something new" or "change this"
@@ -110,13 +112,12 @@ src/
   lib/canvas-tool/
     build-preview-doc.ts     assembles the live preview document
     build-export-doc.ts      assembles the standalone export
-    build-preview-doc.test.ts
-    build-export-doc.test.ts
     image-filter-css.ts      filter stack -> CSS rules and snippets
     prompt-builder.ts        AI prompt assembly
     templates.ts             the template catalog
     template-styles/         one module per template
     aspect-ratios.ts  clipboard.ts  esbuild.ts  fonts.ts
+    *.test.ts                colocated tests for all of the above
   components/canvas-tool/    the editor, preview, asset, and font panels
   components/ui/             shadcn/ui primitives
   types/canvas-tool.ts       CanvasProject and friends
