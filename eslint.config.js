@@ -19,4 +19,14 @@ export default defineConfig([
       globals: globals.browser,
     },
   },
+  {
+    // shadcn/ui primitives export their `cva` variant helper alongside the
+    // component (e.g. buttonVariants). Re-adding a component with
+    // `npx shadcn add` overwrites the file, so an inline disable comment
+    // would not survive — scope the rule off for the directory instead.
+    files: ['src/components/ui/**/*.tsx'],
+    rules: {
+      'react-refresh/only-export-components': 'off',
+    },
+  },
 ])
